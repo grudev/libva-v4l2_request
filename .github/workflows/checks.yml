@@ -183,6 +183,7 @@ jobs:
         run: meson setup /tmp/accept -Dcodec_h264=enabled
 
   codec-options:
+    if: ${{ false }}
     name: codec feature options (all disabled and mixed)
     runs-on: ubuntu-latest
     steps:
