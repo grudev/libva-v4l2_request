@@ -109,6 +109,8 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu:20.04@sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214
     steps:
+      - name: Slow down for the cancellation negative evidence
+        run: sleep 600
       - name: Install git and build dependencies
         # The pinned 20.04 base image ships without tzdata, and the archive's
         # current tzdata postinst prompts for a timezone, which would hang this
