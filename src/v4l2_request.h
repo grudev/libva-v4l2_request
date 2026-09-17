@@ -28,6 +28,7 @@
 
 #include <linux/videodev2.h>
 #include <pthread.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -475,6 +476,70 @@ enum v4l2r_h264_high10_mode {
 };
 
 bool v4l2r_probe_h264_10bit(int fd, uint32_t output_type);
+
+/* --- in-driver concurrency instrumentation (api.c); issue #36, AC2 ---
+ *
+ * api_mutex serializes the locked public entrypoints against each other,
+ * so the only pair of public entrypoints that can genuinely execute
+ * driver code at the same time is a locked one (holding api_mutex) and an
+ * unlocked one. This hook counts exactly that, from inside the driver —
+ * never at the caller. It is a test hook in the spirit of
+ * v4l2r_diag_configure: disabled it costs one relaxed atomic load per
+ * entrypoint, and nothing but the concurrency harness enables it. */
+struct v4l2r_overlap_stats {
+	unsigned long locked_sections;	/* locked entrypoints entered */
+	unsigned long unlocked_calls;	/* unlocked entrypoints entered */
+	/* Unlocked entrypoints that were executing while a locked section
+	 * was active: the in-driver overlap this hook exists to prove. */
+	unsigned long unlocked_over_locked;
+	/* Must stay 1: api_mutex serializes the locked entrypoints. */
+	unsigned max_locked_active;
+	unsigned max_unlocked_during_locked;
+};
+
+extern _Atomic bool v4l2r_overlap_enabled;
+
+/* Enable (and zero) or disable the counters. Test harness only. */
+void v4l2r_overlap_configure(bool enable);
+/* Snapshot the current counters (zeros while disabled). */
+struct v4l2r_overlap_stats v4l2r_overlap_snapshot(void);
+/* Locked sections active right now; the harness's overlap gate waits
+ * for this to become nonzero before firing unlocked operations. */
+unsigned v4l2r_overlap_locked_active(void);
+
+void v4l2r_overlap_locked_enter(void);
+void v4l2r_overlap_locked_exit(void);
+void v4l2r_overlap_unlocked_enter(void);
+void v4l2r_overlap_unlocked_exit(void);
+
+/* Scoped in-driver window for one unlocked entrypoint execution; every
+ * return path, including early validation failures, exits it. */
+struct v4l2r_overlap_scope {
+	bool active;
+};
+
+static inline struct v4l2r_overlap_scope v4l2r_overlap_scope_enter(void)
+{
+	struct v4l2r_overlap_scope scope = {
+		.active = atomic_load_explicit(&v4l2r_overlap_enabled,
+					       memory_order_relaxed),
+	};
+
+	if (scope.active)
+		v4l2r_overlap_unlocked_enter();
+	return scope;
+}
+
+static inline void v4l2r_overlap_scope_exit(const struct v4l2r_overlap_scope *scope)
+{
+	if (scope->active)
+		v4l2r_overlap_unlocked_exit();
+}
+
+#define V4L2R_OVERLAP_UNLOCKED()						\
+	const struct v4l2r_overlap_scope v4l2r_overlap_scope_		\
+		__attribute__((cleanup(v4l2r_overlap_scope_exit)))	\
+		= v4l2r_overlap_scope_enter()
 
 /* Coded dimensions, not the padded CAPTURE allocation. Min/max describe an
  * envelope: discrete pairs and stepwise holes still need context validation. */

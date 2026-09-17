@@ -18,8 +18,32 @@ runbook below; it has not been run as part of the offline work.
 model V4L2 device. There is no decoder, no kernel module and no real sleeping:
 the model completes queued requests after a seeded number of model-time ticks,
 and time only advances when the driver polls or reads its monotonic clock, so
-the schedules advance model waits without a real decoder. Multiple caller threads
-are launched, but this does not prove simultaneous execution inside driver calls.
+the schedules advance model waits without a real decoder.
+
+**In-driver overlap (AC2) is proven by instrumentation inside the driver, not
+by caller-side counting.** `api_mutex` serializes the locked entrypoints against
+each other, so the only public entrypoint pair that can genuinely execute
+driver code simultaneously is a locked one (holding `api_mutex`) and an
+unlocked one. The driver-side hook (`v4l2r_overlap_*` in `src/api.c`, brackets
+in the unlocked entrypoints in `src/buffer.c`, `src/image.c` and
+`src/surface.c`) counts exactly that, and every repetition of every schedule
+asserts the serialization invariant (at most one active locked section). The
+`overlap` and `overlap-actor` registered cases make the overlap itself
+deterministic through a model-device **gate**: while the gate is closed, only
+the gate stream may submit — every other decoder positively waits for the
+close and then the open, so the only held request is the gate stream's frame 0
+(a bare skip-check would race past a not-yet-closed gate and let another
+reader's sync spin on a held request, deadlocking the gate decoder's own
+picture against the `api_mutex` that spin holds). The gate stream's
+`vaSyncSurface` then spins inside the driver while holding `api_mutex` (a real
+in-driver locked section, entered after the mutex is acquired; the model clock
+is frozen and the spin paced with short real sleeps so the window is
+scheduler-friendly and cannot run out its own poll deadline), and the required
+number of unlocked entrypoint executions is recorded against it —
+fired by a valid decoder thread in `overlap`, and by the failure actor's own
+unlocked operations in `overlap-actor`, proving both clients' in-driver
+overlap. The counters are printed per repetition as
+`driver_overlap locked=… unlocked=… over=… max_locked=… max_unl=…`.
 
 The schedules exercise the real public API surface the same way a threaded
 client does:
@@ -66,8 +90,10 @@ printed in each `rep` line):
 | `concurrent-threads-1/2/4` | `threads N 12 10` | `549203187` | 12 |
 | `concurrent-teardown-1/2/4` | `teardown N 12 10` | `812734691` | 12 |
 | `concurrent-failure-4` | `failure 4 12 10` | `3372110043` | 12 |
+| `concurrent-overlap-2` | `overlap 2 6 10` (in-driver gate) | `73204115` | 6 |
+| `concurrent-overlap-actor-2` | `overlap-actor 2 6 10` (actor fires into the gate) | `1946285037` | 6 |
 | `concurrent-processes-1/2/4` | `concurrent-process.py` (3 reps) | `0xC0FFEE` | 12 |
-| `concurrent-tsan` | TSan build, 6 schedules × 3 reps | per schedule | 12 |
+| `concurrent-tsan` | TSan build, 8 schedules × 3 reps | per schedule | 12/6 |
 
 Each stream uses its own mixed profile (H.264/HEVC/VP9 model codecs), surface
 dimensions (64x48, 64x64, 128x96, 96x64), a seeded surface rotation and seeded

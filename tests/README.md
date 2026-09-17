@@ -112,24 +112,32 @@ This interleaves work in one thread; it does not measure concurrent API calls or
 The `concurrent-stress` Meson cases (issue #36) add offline caller schedules: they call the
 real public entrypoints from multiple threads against an in-memory model decoder
 (no device, no real sleeping — the model completes queued work after a seeded number
-of model-time ticks; in-driver overlap is not measured). `threads-1/2/4` decode mixed-codec
+of model-time ticks). `threads-1/2/4` decode mixed-codec
 frames, read them back through GetImage, exported dma-bufs and derived images, and
 destroy each context while later streams continue; `teardown-1/2/4` destroy one
 context mid-decode and require every published frame to complete byte-exact while
 the other streams verify all of theirs; `failure-4` has a separate misbehaving client
 (bogus ids, foreign surfaces, double destroys, live context churn) that owns its own
-context while every valid stream completes exactly. The model device is the decode
+context while every valid stream completes exactly. **In-driver overlap is measured
+inside the driver itself** (`v4l2r_overlap_*` in `src/api.c` with brackets in the
+unlocked entrypoints): every repetition of every schedule asserts the api_mutex
+serialization invariant (at most one active locked section), and the
+`overlap-2`/`overlap-actor-2` cases make the locked+unlocked overlap deterministic
+— the model device holds a chosen request so a `vaSyncSurface` spins inside the
+driver holding api_mutex, and the required unlocked entrypoint executions are
+recorded against it, fired by a valid decoder thread (`overlap-2`) or by the
+failure actor's own unlocked operations (`overlap-actor-2`). The counters are
+printed per repetition as `driver_overlap …`. The model device is the decode
 oracle: slice bytes are hashed when a request is queued and the completion writes a
 pattern derived from that hash into the target CAPTURE plane, so lost frames,
 cross-stream pixels and stale buffer reuse all fail an exact byte comparison. The
 decoder only reuses a surface after the reader verified its previous frame, matching
-a real decoder surface pool. Per-stream MD5s, seeds, ioctl/poll/completion counts and
-the maximum of simultaneously in-flight public entrypoints are printed for the
-evidence record; the mid-decode teardown victim is destroyed while it provably holds
-a staged picture open (between BeginPicture and its buffer creation) and verifies
-exactly half its frames byte-exact — every other count and hash is exact, and a
-first-call rendezvous coordinates caller starts outside the driver. Instrumented
-in-driver overlap remains an open #36 criterion.
+a real decoder surface pool. Per-stream MD5s, seeds, ioctl/poll/completion counts are
+printed for the evidence record; the mid-decode teardown victim is destroyed while
+it provably holds a staged picture open (between BeginPicture and its buffer
+creation) and verifies exactly half its frames byte-exact — every other count and
+hash is exact, and a first-call rendezvous coordinates caller starts outside the
+driver.
 `concurrent-process.py` drives the same single-stream worker in 1/2/4
 separate processes behind a start barrier (per-process isolation; every worker's
 digest is derived independently from the declared seed/frame recipe and compared
