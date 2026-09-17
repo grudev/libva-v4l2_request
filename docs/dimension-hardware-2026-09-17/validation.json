@@ -1,0 +1,712 @@
+{
+  "issue": "https://github.com/iconidentify/libva-v4l2_request/issues/79",
+  "companion_parent": "https://github.com/iconidentify/omarchy-m1-video/issues/12",
+  "date": "2026-09-17",
+  "tested_source_commit": "299d29333bc215d9d045130a0e0c6b8558a6654a",
+  "production_src_tree": "2b48a40943abe31554c3cc8fbf9ce5ed83033b2a",
+  "driver_sha256": "ce5c4513e72d1178f3bcb695f8acd76ad298564df8077eb408722cc447fb6f63",
+  "kernel": "7.1.13-3-1-ARCH",
+  "packages": [
+    "linux-asahi 7.1.13.asahi3-1",
+    "libva 2.24.1-1",
+    "libdrm 2.4.134-1",
+    "ffmpeg 2:9.0.1-4",
+    "libva-v4l2_request-avd 1.3.r11-2"
+  ],
+  "hardware": "Apple M1 T8103 / apple,avd; /dev/video0 and /dev/media0",
+  "recovery": {
+    "authorization": "User explicitly confirmed work saved and authorized one existing-module unload/reload, then tests.",
+    "previous_fault_utc": "2026-09-17T01:25:32.746612+00:00",
+    "operations": [
+      {
+        "command": [
+          "sudo",
+          "-n",
+          "modprobe",
+          "-r",
+          "apple_avd"
+        ],
+        "started": "2026-09-17T02:16:40.167722+00:00",
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "finished": "2026-09-17T02:16:40.250282+00:00"
+      },
+      {
+        "command": [
+          "sudo",
+          "-n",
+          "modprobe",
+          "apple_avd"
+        ],
+        "started": "2026-09-17T02:16:40.251272+00:00",
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "finished": "2026-09-17T02:16:40.272416+00:00"
+      }
+    ],
+    "module_path": "/lib/modules/7.1.13-3-1-ARCH/updates/apple-avd.ko",
+    "module_sha256": "e50540e1d0fc48c7e0bf9b21ff028758bdb35f94aa7070af00de88e61e5c70e9",
+    "previous_faults": [
+      "avd 269080000.avd: H3 error",
+      "avd 269080000.avd: Frame processing timed out!",
+      "avd 269080000.avd: H3 error",
+      "avd 269080000.avd: Frame processing timed out!",
+      "avd 269080000.avd: Frame processing timed out!"
+    ],
+    "journal_since": "2026-09-17 02:16:40 UTC",
+    "outcome": {
+      "healthy": true,
+      "idle": true,
+      "wedged": false,
+      "module_loaded": true,
+      "video_node": "/dev/video0",
+      "faults": []
+    }
+  },
+  "offline_release_tests": {
+    "passed": 177,
+    "failed": 0,
+    "actual_tsan": true
+  },
+  "dimensions": [
+    {
+      "case": "attributes",
+      "profile": 0,
+      "minimum": 64,
+      "maximum": 4096
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 8,
+      "height": 8,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 63,
+      "height": 64,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 64,
+      "height": 63,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 4097,
+      "height": 64,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 64,
+      "height": 4097,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 64,
+      "height": 64,
+      "accepted": true,
+      "status": 0,
+      "format_calls": 1,
+      "request_allocations": 4
+    },
+    {
+      "case": "context",
+      "profile": 0,
+      "width": 66,
+      "height": 66,
+      "accepted": true,
+      "status": 0,
+      "format_calls": 1,
+      "request_allocations": 4
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 8,
+      "height": 8,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 63,
+      "height": 64,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 64,
+      "height": 63,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 4097,
+      "height": 64,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 64,
+      "height": 4097,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 64,
+      "height": 64,
+      "accepted": true,
+      "status": 0,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 0,
+      "width": 66,
+      "height": 66,
+      "accepted": true,
+      "status": 0,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "attributes",
+      "profile": 2,
+      "minimum": 64,
+      "maximum": 4096
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 8,
+      "height": 8,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 63,
+      "height": 64,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 64,
+      "height": 63,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 4097,
+      "height": 64,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 64,
+      "height": 4097,
+      "accepted": false,
+      "status": 1,
+      "format_calls": 0,
+      "request_allocations": 0
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 64,
+      "height": 64,
+      "accepted": true,
+      "status": 0,
+      "format_calls": 1,
+      "request_allocations": 4
+    },
+    {
+      "case": "context",
+      "profile": 2,
+      "width": 66,
+      "height": 66,
+      "accepted": true,
+      "status": 0,
+      "format_calls": 1,
+      "request_allocations": 4
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 8,
+      "height": 8,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 63,
+      "height": 64,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 64,
+      "height": 63,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 4097,
+      "height": 64,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 64,
+      "height": 4097,
+      "accepted": false,
+      "status": 7,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 64,
+      "height": 64,
+      "accepted": true,
+      "status": 0,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "picture",
+      "profile": 2,
+      "width": 66,
+      "height": 66,
+      "accepted": true,
+      "status": 0,
+      "end_status": 7,
+      "submissions": 0
+    },
+    {
+      "case": "summary",
+      "passed": true,
+      "query_calls": 33,
+      "dimension_enumerations": 42,
+      "control_submissions": 0,
+      "request_queues": 0,
+      "initial_capability_control_calls": 2
+    }
+  ],
+  "guarded_results": {
+    "dimensions-v2": [
+      {
+        "event": "preflight",
+        "run_id": "9ab2b273-8cef-45ac-a215-a9a94710b539",
+        "identity": "avd",
+        "idle": true,
+        "module_loaded": true,
+        "userspace": {
+          "libva_drivers_path": "<redacted>",
+          "libva_driver_name": "v4l2_request",
+          "loaded_module_limit": "sysfs shows whether apple_avd is present; this guard cannot certify which module binary was loaded earlier or that every patch is active",
+          "source_commit": "299d29333bc215d9d045130a0e0c6b8558a6654a"
+        },
+        "time": "2026-09-16T19:18:03-0700"
+      },
+      {
+        "event": "start",
+        "run_id": "9ab2b273-8cef-45ac-a215-a9a94710b539",
+        "time": "2026-09-16T19:18:03-0700"
+      },
+      {
+        "event": "final",
+        "run_id": "9ab2b273-8cef-45ac-a215-a9a94710b539",
+        "status": "ok",
+        "returncode": 0,
+        "timed_out": false,
+        "wedged": false,
+        "abort_reason": null,
+        "idle": true,
+        "holders": [],
+        "time": "2026-09-16T19:18:04-0700"
+      }
+    ],
+    "generated": [
+      {
+        "event": "preflight",
+        "run_id": "ce8af62b-7bf6-4a39-8bbf-6b356e2d6dbf",
+        "identity": "avd",
+        "idle": true,
+        "module_loaded": true,
+        "userspace": {
+          "libva_drivers_path": "<redacted>",
+          "libva_driver_name": "v4l2_request",
+          "loaded_module_limit": "sysfs shows whether apple_avd is present; this guard cannot certify which module binary was loaded earlier or that every patch is active",
+          "source_commit": "299d29333bc215d9d045130a0e0c6b8558a6654a"
+        },
+        "time": "2026-09-16T19:18:04-0700"
+      },
+      {
+        "event": "start",
+        "run_id": "ce8af62b-7bf6-4a39-8bbf-6b356e2d6dbf",
+        "time": "2026-09-16T19:18:04-0700"
+      },
+      {
+        "event": "final",
+        "run_id": "ce8af62b-7bf6-4a39-8bbf-6b356e2d6dbf",
+        "status": "ok",
+        "returncode": 0,
+        "timed_out": false,
+        "wedged": false,
+        "abort_reason": null,
+        "idle": true,
+        "holders": [],
+        "time": "2026-09-16T19:18:20-0700"
+      }
+    ],
+    "codec": [
+      {
+        "event": "preflight",
+        "run_id": "13a0587f-0a89-4a2f-a83c-a495e2c1de75",
+        "identity": "avd",
+        "idle": true,
+        "module_loaded": true,
+        "userspace": {
+          "libva_drivers_path": "<redacted>",
+          "libva_driver_name": "v4l2_request",
+          "loaded_module_limit": "sysfs shows whether apple_avd is present; this guard cannot certify which module binary was loaded earlier or that every patch is active",
+          "source_commit": "299d29333bc215d9d045130a0e0c6b8558a6654a"
+        },
+        "time": "2026-09-16T19:18:20-0700"
+      },
+      {
+        "event": "start",
+        "run_id": "13a0587f-0a89-4a2f-a83c-a495e2c1de75",
+        "time": "2026-09-16T19:18:20-0700"
+      },
+      {
+        "event": "final",
+        "run_id": "13a0587f-0a89-4a2f-a83c-a495e2c1de75",
+        "status": "ok",
+        "returncode": 0,
+        "timed_out": false,
+        "wedged": false,
+        "abort_reason": null,
+        "idle": true,
+        "holders": [],
+        "time": "2026-09-16T19:21:58-0700"
+      }
+    ]
+  },
+  "generated": {
+    "shared_context_hardware_frames": 336,
+    "high10_hardware_frames": 144,
+    "vp9_hardware_frames": 384,
+    "total_hardware_frame_comparisons": 864,
+    "native_size_crop_and_truncation_checks": "passed"
+  },
+  "conformance": {
+    "hevc": {
+      "suite": "hevc",
+      "passed": 144,
+      "total": 147,
+      "baseline_total": 147,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "778c3cf8724b7f3a9f9ad59d4633531f110e3d660d27f47721b96e148224d04f",
+      "passing_frames": 8889,
+      "high10": "off",
+      "profile_mismatch": false,
+      "subset": null,
+      "strict_comparison": {
+        "ok": true,
+        "baseline_suite": "JCT-VC-HEVC_V1",
+        "candidate_suite": "JCT-VC-HEVC_V1",
+        "baseline_total": "144/147",
+        "candidate_total": "144/147",
+        "lost_passes": [],
+        "new_passes": [],
+        "missing_vectors": [],
+        "extra_vectors": [],
+        "category_changes": [
+          {
+            "vector": "RPS_E_qualcomm_5",
+            "baseline": "decode_error",
+            "candidate": "checksum_mismatch"
+          },
+          {
+            "vector": "VPSSPSPPS_A_MainConcept_1",
+            "baseline": "decode_error",
+            "candidate": "checksum_mismatch"
+          }
+        ],
+        "first_differing_frames": [
+          {
+            "vector": "RPS_E_qualcomm_5",
+            "reason": "stream_md5",
+            "expected_md5": "c30d38bbd7ea483dc7ffe81325118e16",
+            "baseline_md5": null,
+            "candidate_md5": "b09ac8e0bd31a96d8354505d7c2ebdd5",
+            "index": 0,
+            "candidate": {
+              "index": 0,
+              "width": 416,
+              "height": 240,
+              "md5": "50cc4e6dd7d70f7908b9c3da2500320d",
+              "format": "yuv420p"
+            },
+            "native_sizes": [
+              "416x240"
+            ]
+          },
+          {
+            "vector": "VPSSPSPPS_A_MainConcept_1",
+            "reason": "stream_md5",
+            "expected_md5": "1ddf74263cb4953cfdfcf99c563d88ea",
+            "baseline_md5": null,
+            "candidate_md5": "ec9f5857591ac4c215d194deaf52167c",
+            "index": 0,
+            "candidate": {
+              "index": 0,
+              "width": 352,
+              "height": 288,
+              "md5": "c814e40e0f9b130f44f1abd9cbf10ae6",
+              "format": "yuv420p"
+            },
+            "native_sizes": [
+              "352x288",
+              "1280x720"
+            ]
+          }
+        ],
+        "errors": []
+      }
+    },
+    "avc": {
+      "suite": "avc",
+      "passed": 73,
+      "total": 135,
+      "baseline_total": 135,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "602cb6495b77514d11812c9a957682dc583172b24524ea29bc83bfa1d5803bb0",
+      "passing_frames": 10134,
+      "high10": "off",
+      "profile_mismatch": false,
+      "subset": null,
+      "strict_comparison": {
+        "ok": false,
+        "baseline_suite": "JVT-AVC_V1",
+        "candidate_suite": "JVT-AVC_V1",
+        "baseline_total": "73/135",
+        "candidate_total": "73/135",
+        "lost_passes": [],
+        "new_passes": [],
+        "missing_vectors": [],
+        "extra_vectors": [],
+        "category_changes": [
+          {
+            "vector": "FM1_FT_E",
+            "baseline": "decode_error",
+            "candidate": "software_fallback"
+          }
+        ],
+        "first_differing_frames": [],
+        "errors": [
+          "software fallback cannot produce a green hardware result: FM1_FT_E"
+        ]
+      }
+    },
+    "frext": {
+      "suite": "frext",
+      "passed": 27,
+      "total": 69,
+      "baseline_total": 69,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "4adeeb82abbc258c7f7247f1bcf7e9d70788bf0ea28ee209e498ab9c31746a51",
+      "passing_frames": 4077,
+      "high10": "ffmpeg",
+      "profile_mismatch": false,
+      "subset": null,
+      "strict_comparison": {
+        "ok": true,
+        "baseline_suite": "JVT-FR-EXT",
+        "candidate_suite": "JVT-FR-EXT",
+        "baseline_total": "27/69",
+        "candidate_total": "27/69",
+        "lost_passes": [],
+        "new_passes": [],
+        "missing_vectors": [],
+        "extra_vectors": [],
+        "category_changes": [],
+        "first_differing_frames": [],
+        "errors": []
+      }
+    },
+    "vp9": {
+      "suite": "vp9",
+      "passed": 216,
+      "total": 305,
+      "baseline_total": 305,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "37f79fb4b3c529f54f8f54b0e36040b410d75a2bf71d022f9726e5545bd129b0",
+      "passing_frames": 3334,
+      "high10": "off",
+      "profile_mismatch": false,
+      "subset": null,
+      "strict_comparison": {
+        "ok": true,
+        "baseline_suite": "VP9-TEST-VECTORS",
+        "candidate_suite": "VP9-TEST-VECTORS",
+        "baseline_total": "216/305",
+        "candidate_total": "216/305",
+        "lost_passes": [],
+        "new_passes": [],
+        "missing_vectors": [],
+        "extra_vectors": [],
+        "category_changes": [],
+        "first_differing_frames": [],
+        "errors": []
+      }
+    },
+    "vp9-high10": {
+      "suite": "vp9-high10",
+      "passed": 1,
+      "total": 1,
+      "baseline_total": 1,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "0f0bbd89d3001522d8aa7b86f3a0c1b5ed3d323767a22ed4d504e1b67c4d2df5",
+      "passing_frames": 10,
+      "high10": "off",
+      "profile_mismatch": false,
+      "subset": {
+        "rationale": "explicit --vectors selection; not a full-suite total",
+        "selected": [
+          "vp92-2-20-10bit-yuv420.webm"
+        ]
+      }
+    },
+    "overrides": {
+      "suite": "overrides",
+      "passed": 5,
+      "total": 5,
+      "baseline_total": 5,
+      "lost": [],
+      "gained": [],
+      "suite_definition_sha256": "602cb6495b77514d11812c9a957682dc583172b24524ea29bc83bfa1d5803bb0",
+      "passing_frames": 1233,
+      "high10": "off",
+      "profile_mismatch": true,
+      "subset": {
+        "rationale": "explicit --vectors selection; not a full-suite total",
+        "selected": [
+          "BA3_SVA_C",
+          "MR2_TANDBERG_E",
+          "MR3_TANDBERG_B",
+          "MR4_TANDBERG_C",
+          "MR5_TANDBERG_C"
+        ]
+      }
+    }
+  },
+  "failed_probe": {
+    "directory": "dimensions",
+    "reason": "Harness counted two initialization control-capability probes as admission submissions. Corrected counter baseline after driver initialization; the failed run is retained. The driver rejected 8x8 before context setup, and the guard ended idle without a decoder fault."
+  },
+  "review": "Maintainer implementation and self-review of the hardware probe/evidence; not independent review. PR #80 separately records independent review of its contributor implementation.",
+  "limits": [
+    "The size probe observes and forwards ioctls unchanged; accepted parameter/context sizes are not claimed as decoded frames.",
+    "The AVD 64..4096 contract is a current kernel/userspace boundary, not proof of the firmware minimum.",
+    "Full codec checks use the uninstrumented selected driver. Known failing vectors and any non-green fallback verdict are retained.",
+    "VP9 high-depth coverage is one selected 10-bit 4:2:0 vector; five high-depth suite entries remain outside this hardware qualification.",
+    "The five H.264 profile-override vectors are an explicit subset and do not increase the default AVC total.",
+    "The pre-session decoder timeout remains unexplained. User authorized one existing-module unload/reload after saving work; no automatic retry, reboot, installation or kernel edit occurred.",
+    "The recorded module file hash identifies the file selected for the authorized reload, not a measured in-memory module hash.",
+    "No codec support count, package pin, client/display behaviour or boot stability is promoted. The one-hour resource campaign remains separate #41 work."
+  ],
+  "archive": {
+    "path": "raw-evidence.tar.xz",
+    "sha256": "da978dc478c26be8b5b3860a183de1201c0938f836b6fda7ac07bc5d43743ca7",
+    "members": 1373,
+    "redaction": "Only the maintainer home-directory prefix is replaced with <workspace> in public text; both original and public member hashes are recorded. No media, executable binaries or core dump is included."
+  }
+}
