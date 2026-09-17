@@ -135,7 +135,7 @@ validator fails if no smoke entry provides one:
 | multi-context interleave | generated `shared-contexts` |
 | resolution change | `VP9-TEST-VECTORS#vp90-2-21-resize_inter_640x360_5_1-2.webm` and generated `frame-check-resolution-change` |
 | cropped / odd dimensions | generated `frame-check-crop` (60x44) and `h264-high10` |
-| sub-64 dimension | `VP9-TEST-VECTORS#vp90-2-02-size-08x08.webm` (AVD kernel guard in the pinned source; userspace gate covered offline, selected-driver hardware confirmation pending) |
+| sub-64 dimension | `VP9-TEST-VECTORS#vp90-2-02-size-08x08.webm` (AVD kernel guard in the pinned source; userspace admission and exact pass preservation confirmed in the [selected M1 run](dimension-hardware-2026-09-17/README.md)) |
 | profile override | `JVT-AVC_V1#BA3_SVA_C` |
 | truncated input | generated `frame-check-truncated` (corrupt by construction; must fail) |
 
@@ -183,8 +183,11 @@ proven firmware minimum or evidence about a loaded module. The earlier claim
 that this corpus vector was already rejected in userspace was unverified.
 The `dimensions-*` fixtures exercise VA entrypoints against an intercepted model
 device; they establish neither hardware decode nor exact r11 passing-vector
-preservation. Both remain guarded hardware gates for issue #79. No support row
-or expected-rejection classification is promoted by these offline checks.
+preservation. The separate [17 September selected-driver M1 validation](dimension-hardware-2026-09-17/README.md)
+confirms truthful attributes, early context/picture rejection and preservation of
+the exact r11 passing sets under the exclusive guard. Its raw failures, recovery
+provenance and known non-green AVC fallback verdict are retained. No support row
+or expected-rejection classification is promoted by the offline or hardware checks.
 
 ## Failure classification
 
